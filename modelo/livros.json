@@ -1,0 +1,38 @@
+[
+  {
+    "titulo": "O Alquimista",
+    "codEditora": 1,
+    "resumo": "Um livro sobre sonhos e realização pessoal. Segue a jornada de Santiago em busca do seu tesouro.",
+    "autores": ["Paulo Coelho"]
+  },
+  {
+    "titulo": "Dom Casmurro",
+    "codEditora": 2,
+    "resumo": "A obra-prima de Machado de Assis, narra a história de Bentinho e Capitu e a suspeita de traição.",
+    "autores": ["Machado de Assis"]
+  },
+  {
+    "titulo": "Clean Code",
+    "codEditora": 3,
+    "resumo": "Um guia essencial para programadores sobre como escrever código limpo, legível e de fácil manutenção.",
+    "autores": ["Robert C. Martin"]
+  },
+  {
+    "titulo": "Arquitetura Limpa",
+    "codEditora": 3,
+    "resumo": "Princípios e padrões para projetar software de qualidade e com baixo acoplamento.",
+    "autores": ["Robert C. Martin"]
+  },
+  {
+    "titulo": "O Hobbit",
+    "codEditora": 1,
+    "resumo": "A aventura de Bilbo Bolseiro em busca do tesouro guardado pelo dragão Smaug.",
+    "autores": ["J.R.R. Tolkien"]
+  },
+  {
+    "titulo": "React - Guia Completo",
+    "codEditora": 2,
+    "resumo": "Aprenda React do zero ao avançado com hooks, context API e muito mais.",
+    "autores": ["Autor React"]
+  }
+]

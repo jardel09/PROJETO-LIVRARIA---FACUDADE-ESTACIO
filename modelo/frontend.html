@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livraria · acervo seguro</title>
+    <!-- Política de Segurança de Conteúdo (CSP) rigorosa -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'? https:; style-src 'self' 'unsafe-inline'; img-src data:; connect-src http://localhost:3030;">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: #f4f6fc;
+            color: #121826;
+            line-height: 1.5;
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* cabeçalho minimalista */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1a2c3e, #2c4c6c);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .header p {
+            color: #4b5e77;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* grid responsivo */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 1.75rem;
+        }
+
+        @media (max-width: 760px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding: 1rem;
+            }
+        }
+
+        /* cards */
+        .card {
+            background: #ffffff;
+            border-radius: 1.25rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e9edf2;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #eff3f8;
+        }
+
+        .card-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.01em;
+            color: #2c3e50;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        /* formulário seguro */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #4f6f8f;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.3px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid #dce3ec;
+            border-radius: 0.65rem;
+            font-size: 0.85rem;
+            font-family: inherit;
+            background: #ffffff;
+            transition: 0.15s;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #8aaec0;
+            box-shadow: 0 0 0 3px rgba(56, 96, 128, 0.1);
+        }
+
+        button {
+            background: #1f3b4c;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.6rem 1rem;
+            font-weight: 500;
+            font-size: 0.8rem;
+            font-family: inherit;
+            cursor: pointer;
+            color: white;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #2d4b62;
+        }
+
+        /* pesquisa */
+        .search-box {
+            margin-bottom: 1.2rem;
+        }
+
+        .search-input {
+            padding-left: 2rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238A99AE'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 0.7rem center;
+            background-size: 1rem;
+        }
+
+        /* lista de livros */
+        .livros-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .livro-card {
+            background: #ffffff;
+            border: 1px solid #eaedf2;
+            border-radius: 1rem;
+            padding: 1rem;
+            transition: all 0.12s;
+        }
+
+        .livro-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1f2f3e;
+        }
+
+        .editora-badge {
+            background: #eef2f8;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            color: #2c4c6c;
+        }
+
+        .resumo {
+            font-size: 0.78rem;
+            color: #3f5570;
+            margin: 0.45rem 0;
+            line-height: 1.4;
+        }
+
+        .autores {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.5rem 0 0.75rem;
+        }
+
+        .autor-chip {
+            background: #f0f4fa;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2rem;
+            color: #1f3b4c;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.6rem;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 1px solid #dfe5ef;
+            border-radius: 2rem;
+            padding: 0.3rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #2a4b6e;
+            width: auto;
+            cursor: pointer;
+        }
+
+        .btn-icon.danger {
+            color: #bc5a4c;
+            border-color: #f0deda;
+        }
+
+        .btn-icon.danger:hover {
+            background: #fff4f2;
+        }
+
+        .btn-icon:hover {
+            background: #f9fbfe;
+        }
+
+        .stats {
+            background: #eef2f9;
+            font-size: 0.7rem;
+            border-radius: 2rem;
+            padding: 0.15rem 0.6rem;
+            margin-left: 0.5rem;
+            font-weight: normal;
+        }
+
+        .loading, .empty {
+            text-align: center;
+            padding: 2rem;
+            color: #7a8b9f;
+            font-size: 0.8rem;
+        }
+
+        /* toast seguro (não injeta HTML) */
+        .toast {
+            position: fixed;
+            bottom: 1.2rem;
+            right: 1.2rem;
+            background: #1e2f3c;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            z-index: 999;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            backdrop-filter: blur(4px);
+            animation: fadeSlide 0.2s ease;
+        }
+
+        .toast.error {
+            background: #b13e2e;
+        }
+
+        .toast.success {
+            background: #2f6e47;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>livraria</h1>
+        <p>segurança first • acervo protegido</p>
+    </div>
+    <div class="dashboard">
+        <!-- formulário de cadastro (seguro, validação rigorosa) -->
+        <div class="card">
+            <div class="card-header">
+                <h2>✧ novo livro</h2>
+            </div>
+            <div class="card-body">
+                <form id="secureBookForm">
+                    <div class="form-group">
+                        <label>Título *</label>
+                        <input type="text" id="titulo" autocomplete="off" maxlength="120" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Editora *</label>
+                        <select id="codEditora" required>
+                            <option value="" disabled selected>— selecione —</option>
+                            <option value="1">Editora Atlas</option>
+                            <option value="2">Editora Pearson</option>
+                            <option value="3">Editora Campus</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Resumo *</label>
+                        <textarea id="resumo" maxlength="500" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Autores * (separados por vírgula)</label>
+                        <input type="text" id="autores" placeholder="Ex: Clarice Lispector, Machado de Assis" required>
+                    </div>
+                    <button type="submit" id="submitBtn">+ cadastrar livro</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- listagem + pesquisa -->
+        <div class="card">
+            <div class="card-header">
+                <h2>catálogo <span id="totalCount" class="stats">0</span></h2>
+            </div>
+            <div class="card-body">
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="buscar título, autor ou resumo">
+                </div>
+                <div id="livrosContainer">
+                    <div class="loading">⏳ carregando acervo seguro...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const API_BASE = 'http://localhost:3030/livros';
+    let livrosData = [];       
+    let editMode = false;
+    let editingId = null;
+
+
+    const form = document.getElementById('secureBookForm');
+    const tituloEl = document.getElementById('titulo');
+    const codEditoraEl = document.getElementById('codEditora');
+    const resumoEl = document.getElementById('resumo');
+    const autoresEl = document.getElementById('autores');
+    const submitBtn = document.getElementById('submitBtn');
+    const searchEl = document.getElementById('searchInput');
+    const container = document.getElementById('livrosContainer');
+    const totalSpan = document.getElementById('totalCount');
+
+    
+    const editoras = { 1: 'Editora Atlas', 2: 'Editora Pearson', 3: 'Editora Campus' };
+
+    
+    function showMessage(msg, type = 'info') {
+        const existing = document.querySelector('.toast');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = `toast ${type === 'error' ? 'error' : (type === 'success' ? 'success' : '')}`;
+        toast.textContent = msg;  
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    function sanitizeText(raw) {
+        if (!raw) return '';
+        return String(raw).replace(/<[^>]*>?/gm, '').substring(0, 300);
+    }
+
+    function validateBook(titulo, codEditora, resumo, autoresArray) {
+        if (!titulo || titulo.trim().length < 2) return 'Título deve ter pelo menos 2 caracteres.';
+        if (titulo.length > 120) return 'Título excede 120 caracteres.';
+        if (![1,2,3].includes(Number(codEditora))) return 'Editora inválida.';
+        if (!resumo || resumo.trim().length < 5) return 'Resumo muito curto (mínimo 5 caracteres).';
+        if (resumo.length > 500) return 'Resumo excede 500 caracteres.';
+        if (!autoresArray || autoresArray.length === 0) return 'Informe pelo menos um autor.';
+        for (let autor of autoresArray) {
+            if (autor.length > 60) return 'Cada autor não pode ter mais de 60 caracteres.';
+            if (/[<>{}`]/.test(autor)) return 'Autor contém caracteres inválidos.';
+        }
+        return null;
+    }
+
+    function getValidatedAutores(raw) {
+        if (!raw) return [];
+        const parts = raw.split(',').map(s => s.trim()).filter(s => s !== '');
+        const unique = [...new Map(parts.map(a => [a.toLowerCase(), a])).values()];
+        return unique.slice(0, 5);   
+    }
+
+    function renderLivros(filterText = '') {
+        if (!container) return;
+
+        let filtered = [...livrosData];
+        const lowerFilter = filterText.toLowerCase().trim();
+        if (lowerFilter) {
+            filtered = livrosData.filter(book => {
+                const tituloMatch = book.titulo.toLowerCase().includes(lowerFilter);
+                const resumoMatch = book.resumo.toLowerCase().includes(lowerFilter);
+                const autorMatch = book.autores.some(a => a.toLowerCase().includes(lowerFilter));
+                return tituloMatch || resumoMatch || autorMatch;
+            });
+        }
+
+        totalSpan.textContent = filtered.length;
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        if (filtered.length === 0) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'empty';
+            emptyDiv.textContent = '📭 nenhum livro encontrado';
+            container.appendChild(emptyDiv);
+            return;
+        }
+
+        const listDiv = document.createElement('div');
+        listDiv.className = 'livros-list';
+
+        for (const book of filtered) {
+            const card = document.createElement('div');
+            card.className = 'livro-card';
+
+            const headerDiv = document.createElement('div');
+            headerDiv.style.display = 'flex';
+            headerDiv.style.justifyContent = 'space-between';
+            headerDiv.style.alignItems = 'center';
+            headerDiv.style.marginBottom = '0.3rem';
+
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'livro-title';
+            titleSpan.textContent = sanitizeText(book.titulo);
+
+            const editoraBadge = document.createElement('span');
+            editoraBadge.className = 'editora-badge';
+            editoraBadge.textContent = editoras[book.codEditora] || `Editora ${book.codEditora}`;
+
+            headerDiv.appendChild(titleSpan);
+            headerDiv.appendChild(editoraBadge);
+            card.appendChild(headerDiv);
+
+            const resumoP = document.createElement('div');
+            resumoP.className = 'resumo';
+            resumoP.textContent = sanitizeText(book.resumo.length > 130 ? book.resumo.slice(0, 127) + '...' : book.resumo);
+            card.appendChild(resumoP);
+
+            const autoresDiv = document.createElement('div');
+            autoresDiv.className = 'autores';
+            for (let autor of book.autores.slice(0, 4)) {
+                const chip = document.createElement('span');
+                chip.className = 'autor-chip';
+                chip.textContent = sanitizeText(autor);
+                autoresDiv.appendChild(chip);
+            }
+            if (book.autores.length > 4) {
+                const extra = document.createElement('span');
+                extra.className = 'autor-chip';
+                extra.textContent = `+${book.autores.length - 4}`;
+                autoresDiv.appendChild(extra);
+            }
+            card.appendChild(autoresDiv);
+
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'actions';
+
+            const editBtn = document.createElement('button');
+            editBtn.textContent = 'editar';
+            editBtn.className = 'btn-icon';
+            editBtn.setAttribute('data-id', book._id);
+            editBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                startEditBook(book._id);
+            });
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'excluir';
+            deleteBtn.className = 'btn-icon danger';
+            deleteBtn.setAttribute('data-id', book._id);
+            deleteBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                confirmDeleteBook(book._id);
+            });
+
+            actionsDiv.appendChild(editBtn);
+            actionsDiv.appendChild(deleteBtn);
+            card.appendChild(actionsDiv);
+            listDiv.appendChild(card);
+        }
+        container.appendChild(listDiv);
+    }
+
+    async function fetchLivros() {
+        try {
+            const response = await fetch(API_BASE);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (!Array.isArray(data)) throw new Error('Formato inválido');
+            livrosData = data.map(book => ({
+                ...book,
+                titulo: String(book.titulo || '').substring(0, 120),
+                resumo: String(book.resumo || '').substring(0, 500),
+                autores: Array.isArray(book.autores) ? book.autores.map(a => String(a).substring(0, 60)) : []
+            }));
+            renderLivros(searchEl.value);
+        } catch (err) {
+            console.error(err);
+            showMessage(`Erro de conexão: ${err.message}. Certifique-se que o servidor está em ${API_BASE}`, 'error');
+            while (container.firstChild) container.removeChild(container.firstChild);
+            const errDiv = document.createElement('div');
+            errDiv.className = 'empty';
+            errDiv.textContent = '⚠️ servidor offline. API não encontrada.';
+            container.appendChild(errDiv);
+        }
+    }
+
+    async function createBook(bookData) {
+        const response = await fetch(API_BASE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bookData)
+        });
+        if (!response.ok) {
+            const errorMsg = await response.text();
+            throw new Error(errorMsg || 'Erro ao criar livro');
+        }
+        return await response.json();
+    }
+
+    async function deleteBookById(id) {
+        const response = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
+        if (!response.ok) throw new Error('Não foi possível excluir');
+    }
+
+    function startEditBook(id) {
+        const book = livrosData.find(b => b._id === id);
+        if (!book) return;
+        tituloEl.value = book.titulo;
+        codEditoraEl.value = book.codEditora;
+        resumoEl.value = book.resumo;
+        autoresEl.value = book.autores.join(', ');
+        editMode = true;
+        editingId = id;
+        submitBtn.textContent = '✏️ atualizar livro';
+        document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        showMessage(`Editando: "${book.titulo}" — clique em atualizar para salvar`, 'success');
+    }
+
+    async function updateBookViaDeleteCreate(id, newData) {
+        const created = await createBook(newData);
+        await deleteBookById(id);
+        return created;
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const tituloRaw = tituloEl.value.trim();
+        const codEditora = parseInt(codEditoraEl.value, 10);
+        const resumoRaw = resumoEl.value.trim();
+        const autoresRaw = autoresEl.value.trim();
+
+        const autoresArray = getValidatedAutores(autoresRaw);
+        const validationError = validateBook(tituloRaw, codEditora, resumoRaw, autoresArray);
+        if (validationError) {
+            showMessage(validationError, 'error');
+            return;
+        }
+
+        const livroPayload = {
+            titulo: tituloRaw.substring(0, 120),
+            codEditora: codEditora,
+            resumo: resumoRaw.substring(0, 500),
+            autores: autoresArray.slice(0, 6)
+        };
+
+        try {
+            if (editMode && editingId) {
+                await updateBookViaDeleteCreate(editingId, livroPayload);
+                showMessage('Livro atualizado com segurança!', 'success');
+                editMode = false;
+                editingId = null;
+                submitBtn.textContent = '+ cadastrar livro';
+                form.reset();
+            } else {
+                await createBook(livroPayload);
+                showMessage('Livro cadastrado com sucesso!', 'success');
+                form.reset();
+            }
+            await fetchLivros();  
+        } catch (err) {
+            showMessage(`Falha: ${err.message}`, 'error');
+        }
+    });
+
+    async function confirmDeleteBook(id) {
+        const book = livrosData.find(b => b._id === id);
+        if (!book) return;
+        const confirmMsg = `Tem certeza que deseja excluir "${book.titulo}"?`;
+        if (!confirm(confirmMsg)) return;
+        try {
+            await deleteBookById(id);
+            showMessage('Livro removido permanentemente', 'success');
+            if (editMode && editingId === id) {
+                editMode = false;
+                editingId = null;
+                submitBtn.textContent = '+ cadastrar livro';
+                form.reset();
+            }
+            await fetchLivros();
+        } catch (err) {
+            showMessage(`Erro ao excluir: ${err.message}`, 'error');
+        }
+    }
+
+    searchEl.addEventListener('input', (e) => {
+        renderLivros(e.target.value);
+    });
+
+    fetchLivros();
+</script>
+</body>
+</html>
